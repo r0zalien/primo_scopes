@@ -1,8 +1,5 @@
 import csv
 
-
-#Assigned value 'no_sign_in' to all blank 0 Signed In entries (Some zero signed in entries are type=guest leave those)
-#Assigned value 'undefined' to all blank User Group entries with non-zero Signed In entries
 VISITINGSCHOLAR = ['visitscholar', 'visitingscholar', 'vistfacstaff']
 EMERITUS = ['emeritifac', 'emeritus', 'emeritusfaculty', 'facultyemeriti']
 CALS_WALKIN = ['walkin', 'calswalkin']
@@ -22,8 +19,31 @@ EXT_ED = ['extendededucation', 'e']
 MERGED_STAFF = ['staff', 'staffiii', 'auxilliarystaff', 's', '2']
 UNDEFINED = ['999', 'undefined']
 
+def lower_case_list(terms_list):
+    for idx, val in enumerate(terms_list):
+        terms_list[idx] = terms_list[idx].lower()
+
+lower_case_list(VISITINGSCHOLAR)
+lower_case_list(EMERITUS)
+lower_case_list(CALS_WALKIN)
+lower_case_list(FRIENDS_OF)
+lower_case_list(GRADUATE)
+lower_case_list(RETIRED)
+lower_case_list(ALUMNI)
+lower_case_list(FACULTY)
+lower_case_list(TEST_GROUP)
+lower_case_list(UNDERGRADUATE)
+lower_case_list(TA_GA)
+lower_case_list(INTERNAL_LIBRARY_OPERATIONS)
+lower_case_list(PUBLIC_COMMUNITY)
+lower_case_list(COMMUNITY_COLL)
+lower_case_list(HIGH_SCHOOL)
+lower_case_list(EXT_ED)
+lower_case_list(MERGED_STAFF)
+lower_case_list(UNDEFINED)
+
 csv_file = "clean_data.csv"
-with open(csv_file, 'w') as csvfile:
+with open(csv_file, 'w', newline='') as csvfile:
     with open('2017-2019_xlsx.csv', newline='') as csv_file:
         csv_reader = csv.DictReader(csv_file, delimiter=',')
         writer = csv.DictWriter(csvfile, fieldnames=csv_reader.fieldnames)
@@ -68,11 +88,7 @@ with open(csv_file, 'w') as csvfile:
                 row["User Group"] = "merged_staff"
             elif (row["User Group"] in UNDEFINED):
                 row["User Group"] = "undefined"  
-            elif ((row["User Group"] is None or row["User Group"].strip() == '') and row['Signed In'] == '0'):
-                row["User Group"] = "no_sign_in" 
-            elif ((row["User Group"] is None or row["User Group"].strip() == '') and row['Signed In'] != '0'):
-                row["User Group"] = "undefined"              
+            elif ((row["User Group"] is None or row["User Group"].strip() == '')):
+                row["User Group"] = "no_sign_in" if row["Signed In"] == '0' else "undefined"
+
             writer.writerow(row)
-
-  
-
